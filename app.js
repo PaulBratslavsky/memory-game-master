@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-  //card options
+  /****************************
+    CARDS ARRAY
+  ****************************/
   const cardArray = [
     {
       id: "1",
@@ -7,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
       img: "images/fries.png",
       isShown: false,
     },
-    { 
+    {
       id: "2",
       name: "cheeseburger",
       img: "images/cheeseburger.png",
@@ -75,11 +77,22 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   ];
 
+  /****************************
+    VARIABLES AND SETUP
+  ****************************/
   const grid = document.querySelector(".grid");
+  const triesLeft = document.querySelector("#tries");
+  const resetButton = document.querySelector("#reset");
 
   let cardsChosen = [];
-  let tries = 3;
-  
+  let tries = 5;
+
+  triesLeft.textContent = tries;
+
+  /****************************
+    FUNCTIONS
+  ****************************/
+
   function noMatchFlipBack(cardsChosen) {
     function flipBack() {
       cardsChosen.forEach((card) => {
@@ -92,12 +105,11 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(flipBack, 1000);
   }
 
- 
-
   function flipCard(event) {
+    const selectedCard = cardArray.find(
+      (card) => card.id === event.target.getAttribute("data-id")
+    );
 
-    const selectedCard = cardArray.find((card) => card.id === event.target.getAttribute("data-id"));
-    
     if (cardsChosen.length < 2) {
       cardsChosen.push(selectedCard);
       event.target.setAttribute("src", selectedCard.img);
@@ -107,8 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
           cardsChosen = [];
         } else {
           noMatchFlipBack(cardsChosen);
-          
+
           tries--;
+          triesLeft.textContent = tries;
           console.log(tries);
 
           if (tries === 0) {
@@ -120,8 +133,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
-
-   
   }
 
   function createBoard() {
@@ -136,5 +147,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function resetGame() {
+    tries = 5;
+    triesLeft.textContent = tries;
+    cardsChosen = [];
+    grid.innerHTML = "";
+    createBoard();
+  }
+
+  /****************************
+    EVENT LISTENERS
+  ****************************/
+  resetButton.addEventListener("click", resetGame);
+
+  /****************************
+    INITIALIZE GAME
+  ****************************/
   createBoard();
 });
